@@ -2,13 +2,14 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
 from app import create_app
-from app.models import db
+from app.database import db
+import os
 
-# Create development app (can change to "prod" for production)
-application = create_app("dev")
+# Create development app (change dev environments in .env file)
+application = create_app(os.environ["ENVIRONMENT"])
 
 # Create all database models
-import app.models
+import app.database.models
 db.init_app(application)
 db.create_all(app=application)
 

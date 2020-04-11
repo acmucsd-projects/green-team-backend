@@ -1,10 +1,17 @@
 import os
 from dotenv import load_dotenv
+from string import Template
 
 load_dotenv()
 
-# Any way to make this url cleaner?
-local_postgres_uri = "postgres://" + os.environ["DB_USER"] + ":" + os.environ["DB_PASSWORD"] + "@" + os.environ["DB_HOST"] + ":" + os.environ["DB_PORT"] + "/" + os.environ["DB_DATABASE"]
+local_postgres_uri_template = Template("postgres://${username}:${password}@${host}:${port}/${database}")
+local_postgres_uri = local_postgres_uri_template.safe_substitute(
+    username=os.environ["DB_USER"],
+    password=os.environ["DB_PASSWORD"],
+    host=os.environ["DB_HOST"],
+    port=os.environ["DB_PORT"],
+    database=os.environ["DB_DATABASE"]
+)
 # production_postgres_uri = TBD
 
 class Config:
@@ -24,4 +31,3 @@ config_by_name = {
     "dev": DevelopmentConfig,
     "prod": ProductionConfig
 }
-key = Config.SECRET_KEY

@@ -30,16 +30,16 @@ DB_USER=green_team_user
 DB_PASSWORD=password
 
 SECRET_KEY=my_secret_key
+ENVIRONMENT=dev
 ```
 
 ### File System Structure:
 * `/app` - the main project folder containing everything
 * `/app/api` - contains controllers for routes and Flask blueprints
-* `/app/models` - contains database models (schemas) and classes to create objects
-* `/app/database` - database setup, seeds might go here later
+* `/app/database` - database setup and models, seeds may come here later
+* `/app/database/models` - create and export new models here
 * `/app/services` - contains services that perform necessary logic between API and database
 * `/app/__init__.py` - connect Flask blueprints here
-* `/app/models/__init__.py` - connect new models here
  
 
 
@@ -47,4 +47,4 @@ SECRET_KEY=my_secret_key
 
 * Saving files will automatically refresh server (no need to close and open containers)
 * If you `pip install` any packages, make sure to type `pip freeze > requirements.txt` to save dependencies for Docker to install.
-* Data in the database does not persist after closing containers
+* Data in the database persists after stopping containers (`docker-compose stop`) 

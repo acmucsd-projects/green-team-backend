@@ -1,4 +1,4 @@
-from flask import Blueprint
+from .nodeRouter import node_blueprint
 
-# Define API blueprints here
-node_blueprint = Blueprint('node_blueprint', __name__, url_prefix="/nodes")
+# Export API blueprints here
+__all__ = ["node_blueprint"]

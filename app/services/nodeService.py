@@ -10,10 +10,7 @@ def getNodeById(node_id):
     return node.serialize()
 
 def postNode(node):
-    new_node = BitByteNode(node["name"], node["major"], 
-        node["college"], node["class_year"], node["tree_name"], node["quarter_joined"],
-        node["linkedin"], node["facebook"], node["instagram"], node["child_node_1"], 
-        node["child_node_2"])
+    new_node = BitByteNode(node)
     db.session.add(new_node)
     db.session.commit()
     return new_node.serialize()

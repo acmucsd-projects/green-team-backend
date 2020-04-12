@@ -13,23 +13,17 @@ class BitByteNode(db.Model):
     linkedin = db.Column(db.String(128))
     facebook = db.Column(db.String(128))
     instagram = db.Column(db.String(128))
-    child_node_1 = db.Column(db.Integer)
-    child_node_2 = db.Column(db.Integer)
 
-    def __init__(self, name, major, college, 
-        class_year, tree_name, quarter_joined,
-        linkedin, facebook, instagram, child_node_1, child_node_2):
-        self.name = name
-        self.major = major
-        self.college = college
-        self.class_year = class_year
-        self.tree_name = tree_name
-        self.quarter_joined = quarter_joined
-        self.linkedin = linkedin
-        self.facebook = facebook
-        self.instagram = instagram
-        self.child_node_1 = child_node_1
-        self.child_node_2 = child_node_2
+    def __init__(self, node):
+        self.name = node["name"]
+        self.major = node["major"]
+        self.college = node["college"]
+        self.class_year = node["class_year"]
+        self.tree_name = node["tree_name"]
+        self.quarter_joined = node["quarter_joined"]
+        self.linkedin = node["linkedin"]
+        self.facebook = node["facebook"]
+        self.instagram = node["instagram"]
     
     def serialize(self):
         return {
@@ -43,6 +37,4 @@ class BitByteNode(db.Model):
             "linkedin": self.linkedin,
             "facebook": self.facebook,
             "instagram": self.instagram,
-            "child_node_1": self.child_node_1,
-            "child_node_2": self.child_node_2
         }

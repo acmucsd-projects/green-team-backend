@@ -14,3 +14,9 @@ def postNode(node):
     db.session.add(new_node)
     db.session.commit()
     return new_node.serialize()
+
+def addPointsById(node_id, points):
+    node = db.session.query(BitByteNode).filter_by(id=node_id).first()
+    node.points += points
+    db.session.commit()
+    return node.serialize()

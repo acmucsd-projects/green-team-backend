@@ -21,4 +21,11 @@ def postNode():
 def getNode(node_id):
     node = nodeService.getNodeById(node_id)
     return jsonify(node)
-        
+
+@node_blueprint.route("/points", methods=["POST"])
+def addPoints():
+    body = request.get_json()
+    if not body:
+        return "Error: No request body provided"
+    node = nodeService.addPointsById(body["id"], body["points"])
+    return jsonify(node)

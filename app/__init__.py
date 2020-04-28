@@ -7,8 +7,9 @@ def create_app(config_name):
     app.config.from_object(config_by_name[config_name])
 
     # Import all API blueprints from the __init__.py file
-    from app.api import node_blueprint
+    from app.api import node_blueprint, tree_blueprint
 
     app.register_blueprint(node_blueprint)
+    app.register_blueprint(tree_blueprint)
     
     return app

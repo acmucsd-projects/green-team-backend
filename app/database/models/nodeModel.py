@@ -1,8 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 from .. import db
 
 class BitByteNode(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     major = db.Column(db.String(128))
@@ -32,7 +30,6 @@ class BitByteNode(db.Model):
             "major": self.major,
             "college": self.college,
             "class_year": self.class_year,
-            "tree_name": self.tree_name,
             "quarter_joined": self.quarter_joined,
             "linkedin": self.linkedin,
             "facebook": self.facebook,

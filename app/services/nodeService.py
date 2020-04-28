@@ -8,8 +8,51 @@ def getAllNodes():
     return [node.serialize() for node in nodes]
 
 def getNodeById(node_id):
-    node = db.session.query(BitByteNode).filter_by(id=node_id).first()
-    return node.serialize()
+    node = db.session.query(BitByteNode, Connection.parent_node_id)\
+        .outerjoin(Connection, Connection.node_id == BitByteNode.id)\
+        .filter(BitByteNode.id == node_id).first()
+    
+    if not node:
+        return None
+
+    # returns: {'BitByteNode': <BitByteNode object>, 'parent_node_id': int}
+    # need to flatten to proper dict
+    node = node._asdict()
+    node.update(node.pop("BitByteNode").serialize())
+    
+    return node
+
+def getNodeAndChildren(node_id):
+    root_node = getNodeById(node_id)
+
+    if not root_node:
+        return None
+    
+    non_recursive_clause = db.session.query(Connection, BitByteNode)\
+        .join(BitByteNode, Connection.node_id == BitByteNode.id)\
+        .filter(Connection.parent_node_id == node_id).cte(name='parent_for', recursive=True)
+
+    with_recursive = non_recursive_clause.union_all(
+        db.session.query(Connection, BitByteNode)\
+            .join(BitByteNode, Connection.node_id == BitByteNode.id)\
+            .filter(Connection.parent_node_id == non_recursive_clause.c.node_id)
+    )
+
+    children_nodes = db.session.query(with_recursive).all()
+    
+    if not children_nodes:
+        return [root_node]
+
+    # children_nodes is list w/ elements of type NamedTuple, 
+    # so use built-in func _asdict()
+    nodes = [node._asdict() for node in children_nodes]
+    nodes.insert(0, root_node)
+
+    # remove extra node_id needed in recursive calls for children nodes
+    for node in nodes:
+        node.pop("node_id", None)
+    
+    return nodes
 
 def postNode(node):  
     parent_id = node.get("parent_id", None)

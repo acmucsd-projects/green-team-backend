@@ -30,6 +30,7 @@ class BitByteNode(db.Model):
             "major": self.major,
             "college": self.college,
             "class_year": self.class_year,
+            "tree_name": self.tree_name,
             "quarter_joined": self.quarter_joined,
             "linkedin": self.linkedin,
             "facebook": self.facebook,

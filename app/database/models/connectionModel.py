@@ -1,6 +1,6 @@
 from .. import db
 
-class Connections(db.Model):
+class ParentChildConnection(db.Model):
     node_id = db.Column(db.Integer, db.ForeignKey("bit_byte_node.id"), primary_key=True)
     parent_node_id = db.Column(db.Integer, db.ForeignKey("bit_byte_node.id"))
 

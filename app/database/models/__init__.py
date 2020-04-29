@@ -1,4 +1,5 @@
 from .nodeModel import BitByteNode
-from .connectionsModel import Connections
+from .treeModel import BitByteTree
+from .connectionModel import ParentChildConnection
 
-__all__ = ["BitByteNode", "Connections"]
+__all__ = ["BitByteNode", "BitByteTree", "ParentChildConnection"]

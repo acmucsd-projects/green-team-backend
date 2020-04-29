@@ -1,8 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 from .. import db
 
 class BitByteNode(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     major = db.Column(db.String(128))

@@ -26,7 +26,7 @@ def getNode(node_id):
 
 @node_blueprint.route("/<node_id>/children", methods=["GET"])
 def getNodeAndChildren(node_id):
-    nodes = nodeService.getNodeAndChildren(node_id)
+    nodes = nodeService.getNodeAndChildren(node_id, levels=1)
     if not nodes:
         return {"error" : "Unable to fetch nodes from database"}
     return jsonify(nodes)

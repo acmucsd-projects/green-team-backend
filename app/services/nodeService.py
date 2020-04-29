@@ -3,6 +3,8 @@ from ..database.models import BitByteTree
 from ..database.models import Connection
 from ..database import db
 
+from sqlalchemy import literal
+
 def getAllNodes():
     nodes = db.session.query(BitByteNode)
     return [node.serialize() for node in nodes]
@@ -19,26 +21,32 @@ def getNodeById(node_id):
     # need to flatten to proper dict
     node = node._asdict()
     node.update(node.pop("BitByteNode").serialize())
+    node["level"] = 0
     
     return node
 
-def getNodeAndChildren(node_id):
+def getNodeAndChildren(node_id, **kwargs):
+    levels = kwargs.get('levels', None)
+
     root_node = getNodeById(node_id)
 
     if not root_node:
         return None
     
-    non_recursive_clause = db.session.query(Connection, BitByteNode)\
+    parent = db.session.query(Connection, BitByteNode, literal(1).label('level'))\
         .join(BitByteNode, Connection.node_id == BitByteNode.id)\
         .filter(Connection.parent_node_id == node_id).cte(name='parent_for', recursive=True)
 
-    with_recursive = non_recursive_clause.union_all(
-        db.session.query(Connection, BitByteNode)\
+    children = parent.union_all(
+        db.session.query(Connection, BitByteNode, (parent.c.level + 1).label('level'))\
             .join(BitByteNode, Connection.node_id == BitByteNode.id)\
-            .filter(Connection.parent_node_id == non_recursive_clause.c.node_id)
+            .filter(Connection.parent_node_id == parent.c.node_id)
     )
 
-    children_nodes = db.session.query(with_recursive).all()
+    if levels:
+        children_nodes = db.session.query(children).filter(children.c.level <= levels).all()
+    else:
+        children_nodes = db.session.query(children).all()
     
     if not children_nodes:
         return [root_node]

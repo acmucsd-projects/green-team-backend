@@ -1,6 +1,5 @@
 from ..database.models import BitByteTree
 from ..database.models import BitByteNode
-from ..database.models import Connection
 from ..database import db
 
 from ..services import nodeService

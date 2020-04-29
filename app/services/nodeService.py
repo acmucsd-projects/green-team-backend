@@ -1,6 +1,6 @@
 from ..database.models import BitByteNode
 from ..database.models import BitByteTree
-from ..database.models import Connection
+from ..database.models import ParentChildConnection
 from ..database import db
 
 from sqlalchemy import literal
@@ -10,8 +10,8 @@ def getAllNodes():
     return [node.serialize() for node in nodes]
 
 def getNodeById(node_id):
-    node = db.session.query(BitByteNode, Connection.parent_node_id)\
-        .outerjoin(Connection, Connection.node_id == BitByteNode.id)\
+    node = db.session.query(BitByteNode, ParentChildConnection.parent_node_id)\
+        .outerjoin(ParentChildConnection, ParentChildConnection.node_id == BitByteNode.id)\
         .filter(BitByteNode.id == node_id).first()
     
     if not node:
@@ -33,14 +33,14 @@ def getNodeAndChildren(node_id, **kwargs):
     if not root_node:
         return None
     
-    parent = db.session.query(Connection, BitByteNode, literal(1).label('level'))\
-        .join(BitByteNode, Connection.node_id == BitByteNode.id)\
-        .filter(Connection.parent_node_id == node_id).cte(name='parent_for', recursive=True)
+    parent = db.session.query(ParentChildConnection, BitByteNode, literal(1).label('level'))\
+        .join(BitByteNode, ParentChildConnection.node_id == BitByteNode.id)\
+        .filter(ParentChildConnection.parent_node_id == node_id).cte(name='parent_for', recursive=True)
 
     children = parent.union_all(
-        db.session.query(Connection, BitByteNode, (parent.c.level + 1).label('level'))\
-            .join(BitByteNode, Connection.node_id == BitByteNode.id)\
-            .filter(Connection.parent_node_id == parent.c.node_id)
+        db.session.query(ParentChildConnection, BitByteNode, (parent.c.level + 1).label('level'))\
+            .join(BitByteNode, ParentChildConnection.node_id == BitByteNode.id)\
+            .filter(ParentChildConnection.parent_node_id == parent.c.node_id)
     )
 
     if levels:
@@ -75,9 +75,9 @@ def postNode(node):
         new_tree = BitByteTree(node["tree_name"], new_node.id)
         db.session.add(new_tree)
     
-    # create new Connection if Bit/Byte has parent
+    # create new ParentChildConnection if Bit/Byte has parent
     if parent_id:
-        new_connection = Connection(new_node.id, parent_id)
+        new_connection = ParentChildConnection(new_node.id, parent_id)
         db.session.add(new_connection)
 
     db.session.commit()    

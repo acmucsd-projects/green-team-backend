@@ -10,4 +10,11 @@ def getTree(tree_id):
     if not nodes:
         return {"error" : "Unable to fetch tree from database"}
     return jsonify(nodes)
-        
+
+@tree_blueprint.route("/points", methods=["POST"])
+def addPoints():
+    body = request.get_json()
+    if not body:
+        return "Error: No request body provided"
+    nodes = treeService.addPointsById(body["id"], body["points"])
+    return jsonify(nodes)

@@ -11,6 +11,7 @@ class BitByteNode(db.Model):
     linkedin = db.Column(db.String(128))
     facebook = db.Column(db.String(128))
     instagram = db.Column(db.String(128))
+    opt_in = db.Column(db.Boolean, default=False, nullable=False)
 
     def __init__(self, node):
         self.name = node["name"]
@@ -22,7 +23,8 @@ class BitByteNode(db.Model):
         self.linkedin = node["linkedin"]
         self.facebook = node["facebook"]
         self.instagram = node["instagram"]
-    
+        self.opt_in = node["opt_in"]
+
     def serialize(self):
         return {
             "id": self.id,
@@ -35,4 +37,5 @@ class BitByteNode(db.Model):
             "linkedin": self.linkedin,
             "facebook": self.facebook,
             "instagram": self.instagram,
+            "opt_in": self.opt_in
         }

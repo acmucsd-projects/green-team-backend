@@ -11,7 +11,7 @@ class BitByteNode(db.Model):
     linkedin = db.Column(db.String(128))
     facebook = db.Column(db.String(128))
     instagram = db.Column(db.String(128))
-    opt_in = db.Column(db.String(128))
+    opt_in = db.Column(db.Boolean, default=False, nullable=False)
 
     def __init__(self, node):
         self.name = node["name"]

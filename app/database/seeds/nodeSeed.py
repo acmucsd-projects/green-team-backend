@@ -1,4 +1,3 @@
-# from flask_seeder import Seeder
 from ..models import BitByteNode
 from .. import db
 

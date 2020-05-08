@@ -12,7 +12,7 @@ local_postgres_uri = local_postgres_uri_template.safe_substitute(
     port=os.environ["DB_PORT"],
     database=os.environ["DB_DATABASE"]
 )
-# production_postgres_uri = TBD
+production_postgres_uri = os.environ["DATABASE_URL"]
 
 class Config:
     DEBUG = False
@@ -24,10 +24,9 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = local_postgres_uri
 
 class ProductionConfig(Config):
-    DEBUG = False
-    # SQLALCHEMY_DATABASE_URI = production_postgres_uri
+    SQLALCHEMY_DATABASE_URI = production_postgres_uri
 
 config_by_name = {
-    "dev": DevelopmentConfig,
-    "prod": ProductionConfig
+    "development": DevelopmentConfig,
+    "production": ProductionConfig
 }

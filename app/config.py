@@ -4,27 +4,25 @@ from string import Template
 
 load_dotenv()
 
-local_postgres_uri_template = Template("postgres://${username}:${password}@${host}:${port}/${database}")
-local_postgres_uri = local_postgres_uri_template.safe_substitute(
+postgres_uri_template = Template("postgres://${username}:${password}@${host}:${port}/${database}")
+postgres_uri = postgres_uri_template.safe_substitute(
     username=os.environ["DB_USER"],
     password=os.environ["DB_PASSWORD"],
     host=os.environ["DB_HOST"],
     port=os.environ["DB_PORT"],
     database=os.environ["DB_DATABASE"]
 )
-production_postgres_uri = os.environ["DATABASE_URL"]
 
 class Config:
-    DEBUG = False
     SECRET_KEY = os.environ["SECRET_KEY"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = postgres_uri
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = local_postgres_uri
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = production_postgres_uri
+    DEBUG = False
 
 config_by_name = {
     "development": DevelopmentConfig,

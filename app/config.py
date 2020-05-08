@@ -24,7 +24,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = local_postgres_uri
 
 class ProductionConfig(Config):
-    DEBUG = True
+    DEBUG = False
     # SQLALCHEMY_DATABASE_URI = production_postgres_uri
 
 config_by_name = {

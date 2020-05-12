@@ -1,4 +1,5 @@
 from .. import db
+import datetime
 
 # Supports easily pulling up entire trees and storing common information
 class BitByteTree(db.Model):
@@ -7,17 +8,22 @@ class BitByteTree(db.Model):
     name = db.Column(db.String(128))
     points = db.Column(db.Integer, default=0)
     root_id = db.Column(db.Integer, db.ForeignKey("bit_byte_node.id"))
-    # add badges, tree description, etc. if confirmed feature
+    year = db.Column(db.Integer, default=datetime.date.today().year)
+    description = db.Column(db.Text)
 
-    def __init__(self, name, root_id):
+    def __init__(self, name, root_id, description):
         self.name = name
         self.points = 0
         self.root_id = root_id
+        self.year = year
+        self.description = description
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "points": self.points,
-            "root_id": self.root_id
+            "root_id": self.root_id,
+            "year": self.year,
+            "description": self.description
         }

@@ -2,8 +2,8 @@ from ..models import BitByteNode
 from .. import db
 
 def seedNodes():
-    nodes = {
-        "node1":  BitByteNode({
+    nodes = [
+        BitByteNode({
             "name": "John Doe",
             "major": "Computer Science",
             "college": "Sixth",
@@ -15,7 +15,7 @@ def seedNodes():
             "instagram": "https://www.instagram.com",
             "opt_in": True,
         }),
-        "node2": BitByteNode({
+        BitByteNode({
             "name": "Jane Doe",
             "major": "Math-CS",
             "college": "Warren",
@@ -27,7 +27,7 @@ def seedNodes():
             "instagram": "https://www.instagram.com",
             "opt_in": True,
         }),
-        "node3":  BitByteNode({
+        BitByteNode({
             "name": "Jack Doe",
             "major": "Data Science",
             "college": "Muir",
@@ -39,7 +39,7 @@ def seedNodes():
             "instagram": "https://www.instagram.com",
             "opt_in": True,
         }),
-        "node4": BitByteNode({
+        BitByteNode({
             "name": "Fred Ted",
             "major": "Computer Engineering",
             "college": "Sixth",
@@ -51,7 +51,7 @@ def seedNodes():
             "instagram": "https://www.instagram.com",
             "opt_in": True,
         }),
-        "node5": BitByteNode({
+        BitByteNode({
             "name": "Lisa McCormick",
             "major": "Computer Science",
             "college": "ERC",
@@ -63,14 +63,10 @@ def seedNodes():
             "instagram": "https://www.instagram.com",
             "opt_in": True,
         })
-    }
+    ]
         
-    nodesToDelete = db.session.query(BitByteNode).all()
-    for node in nodesToDelete:
-        db.session.delete(node)
-    db.session.commit()
-    for node in nodes:
-        db.session.add(nodes[node])
+    db.session.query(BitByteNode).delete()
+    db.session.bulk_save_objects(nodes)
     db.session.commit()
     
 

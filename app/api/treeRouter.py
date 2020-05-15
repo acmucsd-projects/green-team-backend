@@ -1,6 +1,7 @@
 from flask import request, json, jsonify, Blueprint
 
 from ..services import treeService
+from ..storage.s3 import upload_file
 
 tree_blueprint = Blueprint('tree_blueprint', __name__, url_prefix="/trees")
 
@@ -18,3 +19,11 @@ def addPoints():
         return "Error: No request body provided"
     nodes = treeService.addPointsById(body["id"], body["points"])
     return jsonify(nodes)
+
+@tree_blueprint.route("/picture", methods=["POST"])
+def uploadPicture():
+    file = request.get_json()
+    if not file:
+        return "Error: No file provided"
+    file_url = upload_file(file) 
+

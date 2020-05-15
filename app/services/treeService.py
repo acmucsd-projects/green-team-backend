@@ -21,3 +21,9 @@ def addPointsById(tree_id, points):
     tree.points += points
     db.session.commit()
     return tree.serialize()
+
+def updateProfileUrl(tree_id, url):
+    tree = db.session.query(BitByteNode).filter_by(id=tree_id).first()
+    tree.profile_picture_url = url
+    db.session.commit()
+    return tree.serialize()

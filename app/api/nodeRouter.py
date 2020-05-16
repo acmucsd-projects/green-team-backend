@@ -1,8 +1,22 @@
 from flask import request, json, jsonify, Blueprint
-
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import check_password_hash
+from ..database.models import User
+from ..database import db
 from ..services import nodeService
 
+auth = HTTPBasicAuth()
 node_blueprint = Blueprint('node_blueprint', __name__, url_prefix="/nodes")
+
+@auth.verify_password
+def verify_password(username, password):
+    user = db.session.query(User).filter_by(username=username).first()
+
+    if not user:
+        return None
+
+    if username in users and check_password_hash(user.username, password):
+        return username
 
 @node_blueprint.route("/", methods=["GET"])
 def getAllNodes():
@@ -10,6 +24,7 @@ def getAllNodes():
     return jsonify(nodes)
 
 @node_blueprint.route("/", methods=["POST"])
+@auth.login_required
 def postNode():
     node = request.get_json()
     if not node:
@@ -30,5 +45,3 @@ def getNodeAndChildren(node_id):
     if not nodes:
         return {"error" : "Unable to fetch nodes from database"}
     return jsonify(nodes)
-
-        

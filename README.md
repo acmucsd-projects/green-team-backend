@@ -41,7 +41,14 @@ ENVIRONMENT=dev
 * `/app/services` - contains services that perform necessary logic between API and database
 * `/app/__init__.py` - connect Flask blueprints here
  
+### Seeding Database Tables
 
+To seed the development database tables with initial data, follow these steps (skip to step 4 if not running on the docker containers):
+
+1. `docker-compose up -d --build` to start the local database and app
+2. `docker ps` to view the CONTAINER ID of the backend app (not the database). Copy the CONTAINER ID of that container.
+3. `docker exec -it <CONTAINER_ID> bash` to open the bash shell of the container
+4. `python manage.py seed` to seed the tables
 
 ### Notes:
 

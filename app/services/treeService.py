@@ -16,6 +16,11 @@ def getTree(tree_id):
 
     return tree
 
+def updateTree(tree_id, body):
+    # TODO: add error handling
+    tree = db.session.query(BitByteTree).filter_by(id=tree_id).update(body)
+    return tree
+
 def addPointsById(tree_id, points):
     tree = db.session.query(BitByteTree).filter_by(id=tree_id).first()
     tree.points += points
@@ -23,7 +28,7 @@ def addPointsById(tree_id, points):
     return tree.serialize()
 
 def updateProfileUrl(tree_id, url):
-    tree = db.session.query(BitByteNode).filter_by(id=tree_id).first()
+    tree = db.session.query(BitByteTree).filter_by(id=tree_id).first()
     tree.profile_picture_url = url
     db.session.commit()
     return tree.serialize()

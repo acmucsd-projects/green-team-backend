@@ -16,7 +16,6 @@ class BitByteTree(db.Model):
         self.name = name
         self.points = 0
         self.root_id = root_id
-        self.year = year
         self.description = description
 
     def serialize(self):

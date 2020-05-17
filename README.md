@@ -30,7 +30,12 @@ DB_USER=green_team_user
 DB_PASSWORD=password
 
 SECRET_KEY=my_secret_key
-ENVIRONMENT=dev
+ENVIRONMENT=development
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_S3_BUCKET=
+
 ```
 
 ### File System Structure:
@@ -54,4 +59,4 @@ To seed the development database tables with initial data, follow these steps (s
 
 * Saving files will automatically refresh server (no need to close and open containers)
 * If you `pip install` any packages, make sure to type `pip freeze > requirements.txt` to save dependencies for Docker to install.
-* Data in the database persists after stopping containers (`docker-compose stop`) 
+* Data in the database persists after stopping containers (`docker-compose stop`)

@@ -9,6 +9,11 @@ import os
 
 tree_blueprint = Blueprint('tree_blueprint', __name__, url_prefix="/trees")
 
+@tree_blueprint.route("/", methods=["GET"])
+def getTreesAsc():
+    trees = treeService.getTreesAsc()
+    return { "error": None, "trees": trees }
+
 @tree_blueprint.route("/<tree_id>", methods=["GET"])
 def getTree(tree_id):
     nodes = treeService.getTree(tree_id)

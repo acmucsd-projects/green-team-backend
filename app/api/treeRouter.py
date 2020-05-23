@@ -16,10 +16,10 @@ def getTreesAsc():
 
 @tree_blueprint.route("/<tree_id>", methods=["GET"])
 def getTree(tree_id):
-    nodes = treeService.getTree(tree_id)
-    if not nodes:
+    tree = treeService.getTree(tree_id)
+    if not tree:
         return {"error" : "Unable to fetch tree from database"}
-    return jsonify(nodes)
+    return { "error": None, "tree": tree }
 
 @tree_blueprint.route("/<tree_id>", methods=["PUT"])
 def putTree(tree_id):
@@ -27,22 +27,22 @@ def putTree(tree_id):
     if not body:
         return {"error" : "No request body provided"}
     tree = treeService.updateTree()
-    return { "tree": tree }
+    return { "error": None, "tree": tree }
 
 @tree_blueprint.route("/points", methods=["POST"])
 def addPoints():
     body = request.get_json()
     if not body:
-        return "Error: No request body provided"
-    nodes = treeService.addPointsById(body["id"], body["points"])
-    return jsonify(nodes)
+        return { "error" : "No request body provided" }
+    tree = treeService.addPointsById(body["id"], body["points"])
+    return { "error": None, "tree": tree }
 
 @tree_blueprint.route("/picture", methods=["POST"])
 def uploadPicture():
     file = request.files["image"]
     tree_id = request.form.get("tree_id")
     if not file:
-        return "Error: No file provided"
+        return { "error" : "No file provided" }
     filename = str(uuid.uuid4())
     file.save(os.path.join("/tmp/", filename))
     file_url = upload_file(filename)

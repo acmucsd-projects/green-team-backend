@@ -6,11 +6,7 @@ from ..services import nodeService
 
 def getTreesAsc():
     trees = db.session.query(BitByteTree).order_by(BitByteTree.name).all()
-    for i in range(len(trees)):
-        trees[i] = trees[i].serialize()
-        nodes = nodeService.getNodeAndChildren(trees[i]["root_id"])
-        trees[i]["nodes"] = nodes
-    return trees
+    return [tree.serialize() for tree in trees]
 
 def getTree(tree_id):
     tree = db.session.query(BitByteTree).filter_by(id=tree_id).first()

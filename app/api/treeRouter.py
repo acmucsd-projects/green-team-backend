@@ -44,8 +44,8 @@ def putTree(tree_id):
 def addPoints():
     try:
         body = request.get_json()
-        if not body:
-            return sendError(400, "No request body provided")
+        if not body or body["id"] or body["points"]:
+            return sendError(400, "Missing id or points in request body")
         tree = treeService.addPointsById(body["id"], body["points"])
         return { "tree": tree, "error": None }
     except:

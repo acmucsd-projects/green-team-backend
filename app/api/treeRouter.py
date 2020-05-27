@@ -4,6 +4,7 @@ from ..services import treeService
 from ..storage.s3 import upload_file
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
+from ..error.responses import sendError
 
 import uuid
 import os
@@ -14,55 +15,55 @@ tree_blueprint = Blueprint('tree_blueprint', __name__, url_prefix="/trees")
 def getTreesAsc():
     try:
         trees = treeService.getTreesAsc()
-        return { "error": None, "trees": trees }
+        return { "trees": trees, "error": None }
     except:
-        return { "error": "Error fetching trees" }
+        return sendError(500, "An error occurred while retrieving trees")
 
 @tree_blueprint.route("/<tree_id>", methods=["GET"])
 def getTree(tree_id):
     try:
         tree = treeService.getTree(tree_id)
         if not tree:
-            return {"error" : "Unable to fetch tree from database"}
-        return { "error": None, "tree": tree }
+            return sendError(404, "Tree not found in database")
+        return { "tree": tree, "error": None }
     except:
-        return { "error": "Error fetching tree" }
+        return sendError(500, "An error occurred while retrieving tree")
 
 @tree_blueprint.route("/<tree_id>", methods=["PUT"])
 def putTree(tree_id):
     try:
         body = request.get_json()
         if not body:
-            return {"error" : "No request body provided"}
+            return sendError(400, "No request body provided")
         tree = treeService.updateTree()
-        return { "error": None, "tree": tree }
+        return { "tree": tree, "error": None }
     except:
-        return { "error": "Error updating tree" }
+        return sendError(500, "An error occurred while updating tree")
 
 @tree_blueprint.route("/points", methods=["POST"])
 def addPoints():
     try:
         body = request.get_json()
         if not body:
-            return { "error" : "No request body provided" }
+            return sendError(400, "No request body provided")
         tree = treeService.addPointsById(body["id"], body["points"])
-        return { "error": None, "tree": tree }
+        return { "tree": tree, "error": None }
     except:
-        return { "error": "Error updating tree's points" }
+        return sendError(500, "An error occurred while updating points of tree")
 
 @tree_blueprint.route("/picture", methods=["POST"])
 def uploadPicture():
     try:
         file = request.files["image"]
         tree_id = request.form.get("id")
-        if not file:
-            return { "error" : "No file provided" }
+        if not file or not tree_id:
+            return sendError(400, "Missing file or id in request body")
         filename = str(uuid.uuid4())
         file.save(os.path.join("/tmp/", filename))
         file_url = upload_file(filename)
         tree = treeService.updateProfileUrl(tree_id, file_url)
-        return { "message" : "File uploaded successfully", "tree": tree }
+        return { "tree": tree, "error": None }
     except RequestEntityTooLarge:
-        return { "error": "File size too large"}
+        return sendError(400, "File size too large")
     except:
-        return { "error": "Error uploading file" }
+        return sendError(500, "An error occurred while updating profile picture of tree")

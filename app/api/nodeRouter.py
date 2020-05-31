@@ -1,5 +1,5 @@
 from flask import request, json, jsonify, Blueprint
-
+from ..services.authService import auth
 from ..services import nodeService
 from ..error.responses import sendError
 
@@ -13,6 +13,7 @@ def getAllNodes():
     except:
         return sendError(500, "An error occurred while retrieving nodes")
 @node_blueprint.route("/", methods=["POST"])
+@auth.login_required
 def postNode():
     try:
         node = request.get_json()
@@ -42,5 +43,3 @@ def getNodeAndChildren(node_id):
         return { "nodes": nodes, "error": None }
     except:
         return sendError(500, "An error occurred while retrieving nodes")
-
-        

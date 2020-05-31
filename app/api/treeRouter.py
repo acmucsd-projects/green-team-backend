@@ -1,5 +1,5 @@
 from flask import request, json, jsonify, Blueprint
-
+from ..services.authService import auth
 from ..services import treeService
 from ..storage.s3 import upload_file
 from werkzeug.utils import secure_filename
@@ -41,6 +41,7 @@ def putTree(tree_id):
         return sendError(500, "An error occurred while updating tree")
 
 @tree_blueprint.route("/points", methods=["POST"])
+@auth.login_required
 def addPoints():
     try:
         body = request.get_json()

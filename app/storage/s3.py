@@ -13,7 +13,7 @@ def upload_file(file_name):
         aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
     )
     
-    s3_client.upload_file('/tmp/' + file_name, bucket, object_name)
+    s3_client.upload_file('/tmp/' + file_name, bucket, object_name, ExtraArgs={'ACL':'public-read'})
 
     config = Config(signature_version=UNSIGNED)
     config.signature_version = UNSIGNED

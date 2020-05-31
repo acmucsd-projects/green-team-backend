@@ -5,7 +5,7 @@ import datetime
 class BitByteTree(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
+    name = db.Column(db.String(128), index=True)
     points = db.Column(db.Integer, default=0)
     root_id = db.Column(db.Integer, db.ForeignKey("bit_byte_node.id"))
     year = db.Column(db.Integer, default=datetime.date.today().year)

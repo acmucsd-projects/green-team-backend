@@ -17,7 +17,7 @@ db.create_all(app=application)
 
 # Set up manager and migration functionality
 manager = Manager(application)
-migrate = Migrate(application, db)
+migrate = Migrate(application, db, directory="./app/database/migrations/")
 
 manager.add_command("db", MigrateCommand)
 

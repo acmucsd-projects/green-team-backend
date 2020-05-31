@@ -4,6 +4,10 @@ from ..database import db
 
 from ..services import nodeService
 
+def getTreesAsc():
+    trees = db.session.query(BitByteTree).order_by(BitByteTree.name).all()
+    return [tree.serialize() for tree in trees]
+
 def getTree(tree_id):
     tree = db.session.query(BitByteTree).filter_by(id=tree_id).first()
     if not tree:

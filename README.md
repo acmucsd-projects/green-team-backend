@@ -23,14 +23,19 @@ Backend API for Green Team ACM Side Projects
 #### Example .env file
 
 ```
-DB_HOST=db      // name of docker container database service, which is "db" in docker-compose.yml
+DB_HOST=db
 DB_PORT=5432
 DB_DATABASE=green_team_db
 DB_USER=green_team_user
 DB_PASSWORD=password
 
 SECRET_KEY=my_secret_key
-ENVIRONMENT=dev
+ENVIRONMENT=development
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_S3_BUCKET=
+
 ```
 
 ### File System Structure:
@@ -41,6 +46,15 @@ ENVIRONMENT=dev
 * `/app/services` - contains services that perform necessary logic between API and database
 * `/app/__init__.py` - connect Flask blueprints here
  
+### Migrating Database Tables
+
+To write migrations to update the development/staging/production tables, follow these steps:
+
+1. Add all necessary model updates to the Model classes
+2. If using Docker, enter the container's shell by typing `docker exec -it <CONTAINER_ID> bash`. Skip this step if not using Docker
+3. `python manage.py db migrate -m "<migration changes>"` - this creates a new migration with the schema changes that have not yet been added in the tables by comparing those schemas to the ones in the `app/database/models`.
+4. `python manage.py db upgrade` to run the migrations locally. 
+
 ### Seeding Database Tables
 
 To seed the development database tables with initial data, follow these steps (skip to step 4 if not running on the docker containers):
@@ -54,4 +68,4 @@ To seed the development database tables with initial data, follow these steps (s
 
 * Saving files will automatically refresh server (no need to close and open containers)
 * If you `pip install` any packages, make sure to type `pip freeze > requirements.txt` to save dependencies for Docker to install.
-* Data in the database persists after stopping containers (`docker-compose stop`) 
+* Data in the database persists after stopping containers (`docker-compose stop`)

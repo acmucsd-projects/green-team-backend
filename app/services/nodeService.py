@@ -72,7 +72,7 @@ def postNode(node):
 
     # create new Tree if doesnt exist, otherwise add to that tree
     if not tree_id:
-        new_tree = BitByteTree(node["tree_name"], new_node.id)
+        new_tree = BitByteTree(node["tree_name"], new_node.id, "No description")
         db.session.add(new_tree)
     
     # create new ParentChildConnection if Bit/Byte has parent

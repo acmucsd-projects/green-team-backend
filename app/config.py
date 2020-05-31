@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from string import Template
 
 load_dotenv()
+BYTES_PER_KILOBYTE = 1024
 
 postgres_uri_template = Template("postgres://${username}:${password}@${host}:${port}/${database}")
 postgres_uri = postgres_uri_template.safe_substitute(
@@ -17,6 +18,7 @@ class Config:
     SECRET_KEY = os.environ["SECRET_KEY"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = postgres_uri
+    MAX_CONTENT_LENGTH = 512 * BYTES_PER_KILOBYTE
 
 class DevelopmentConfig(Config):
     DEBUG = True
